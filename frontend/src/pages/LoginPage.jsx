@@ -12,9 +12,10 @@ const MESSAGES = [
   { side: "right", text: "AES-256. Nobody's reading this but us.",  delay: 3600 },
 ];
 
-function MessageConsole() {
+function MessageConsole({ onFirstCompletion }) {
   const [visibleCount, setVisibleCount] = useState(0);
   const [key, setKey] = useState(0);
+  const [isFirstCompletion, setIsFirstCompletion] = useState(true);
 
   useEffect(() => {
     let timeouts = [];
@@ -26,6 +27,12 @@ function MessageConsole() {
         }, index === 0 ? 500 : 1500);
         timeouts.push(t);
       } else {
+        // First completion reached
+        if (isFirstCompletion && onFirstCompletion) {
+          onFirstCompletion();
+          setIsFirstCompletion(false);
+        }
+        
         const t = setTimeout(() => {
           setVisibleCount(0);
           setKey(prev => prev + 1);
@@ -36,7 +43,7 @@ function MessageConsole() {
 
     showNext(0);
     return () => timeouts.forEach(t => clearTimeout(t));
-  }, [key]);
+  }, [key, isFirstCompletion, onFirstCompletion]);
 
   return (
     <div className="space-y-5 pt-4 border-x border-white/[0.03] px-3 pb-10 overflow-hidden relative">
@@ -161,10 +168,25 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPw, setShowPw] = useState(false);
   const [active, setActive] = useState(null);
+  const [consoleCompleted, setConsoleCompleted] = useState(false);
+  const formRef = useRef(null);
   const { login, isLoggingIn } = useAuthStore();
 
   const handleSubmit = (e) => { e.preventDefault(); login(form); };
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  // Auto-scroll to form when console completes for first time (mobile only)
+  useEffect(() => {
+    if (consoleCompleted && formRef.current) {
+      // Only scroll on screens smaller than lg (1024px)
+      const isSmallScreen = window.innerWidth < 1024;
+      if (isSmallScreen) {
+        setTimeout(() => {
+          formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 2000); // Much slower scroll - 2 seconds delay
+      }
+    }
+  }, [consoleCompleted]);
 
   // Data stream columns
   const streams = useRef(
@@ -187,7 +209,7 @@ export default function LoginPage() {
   );
 
   return (
-    <div className="auth-brightness min-h-screen bg-[#050507] text-white relative overflow-hidden" style={{ cursor: "none" }}>
+    <div className="auth-brightness min-h-screen bg-[#050507] text-white relative overflow-x-hidden overflow-y-auto" style={{ cursor: "none", scrollPaddingTop: "120px" }}>
       <CursorEffect />
 
       {/* ── Data stream background ── */}
@@ -261,12 +283,12 @@ export default function LoginPage() {
 
             <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-transparent to-transparent z-10 pointer-events-none" />
             
-            <MessageConsole />
+            <MessageConsole onFirstCompletion={() => setConsoleCompleted(true)} />
           </div>
         </div>
 
-        {/* ══ Form (Middle on mobile, right on desktop) ══ */}
-        <div className="flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 lg:py-0 lg:flex-1 w-full lg:w-auto order-2 lg:order-2">
+        {/* ══ Form (Last on mobile, right on desktop) ══ */}
+        <div className="flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 lg:py-0 lg:flex-1 w-full lg:w-auto order-3 lg:order-2" ref={formRef}>
           <div className="w-full max-w-[400px] space-y-7">
 
             <div className="appear-1">
@@ -346,8 +368,8 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* ══ Console (Bottom on mobile only) ══ */}
-        <div className="flex flex-col justify-center px-0 py-6 sm:py-8 shrink-0 space-y-0 relative w-full order-3 lg:hidden">
+        {/* ══ Console (Second on mobile, hidden on desktop) ══ */}
+        <div className="flex flex-col justify-center px-0 py-6 sm:py-8 shrink-0 space-y-0 relative w-full order-2 lg:hidden">
           {/* Floating chat preview */}
           <div className="appear-3 relative min-h-[240px] sm:min-h-[260px] w-full max-w-xl mx-auto">
             {/* Console Header */}
@@ -361,7 +383,7 @@ export default function LoginPage() {
 
             <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-transparent to-transparent z-10 pointer-events-none" />
             
-            <MessageConsole />
+            <MessageConsole onFirstCompletion={() => setConsoleCompleted(true)} />
           </div>
         </div>
       </main>
