@@ -33,9 +33,9 @@ function ProfileHeader() {
           <img
             src={selectedImg || authUser.profilePic || "/avatar.png"}
             alt="avatar"
-            className="size-10 rounded-xl object-cover border border-white/10 group-hover:border-amber-500/50 transition-all duration-300"
+            className="size-10 rounded-full object-cover border border-white/10 group-hover:border-amber-500/50 transition-all duration-300"
           />
-          <div className="absolute inset-0 rounded-xl bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+          <div className="absolute inset-0 rounded-full bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
             <Camera className="size-3.5 text-amber-500" />
           </div>
           {/* Online dot */}

@@ -16,7 +16,7 @@ function MessageBubble({ msg, isMine, showAvatar, senderPic, onZoom }) {
       {!isMine && (
         <div className="flex-shrink-0 mb-1">
           {showAvatar
-            ? <img src={senderPic || "/avatar.png"} alt="" className="size-8 rounded-xl object-cover border border-white/10" />
+            ? <img src={senderPic || "/avatar.png"} alt="" className="size-8 rounded-full object-cover border border-white/10" />
             : <div className="w-8" />
           }
         </div>

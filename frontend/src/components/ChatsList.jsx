@@ -40,7 +40,7 @@ function ChatsList() {
               <img
                 src={chat.profilePic || "/avatar.png"}
                 alt={chat.fullName}
-                className={`size-11 rounded-xl object-cover border transition-colors ${isActive ? "border-amber-500/30" : "border-white/8 group-hover:border-white/15"}`}
+                className={`size-11 rounded-full object-cover border transition-colors ${isActive ? "border-amber-500/30" : "border-white/8 group-hover:border-white/15"}`}
               />
               {isOnline && (
                 <div className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full bg-green-500 border-2 border-[#07070a]" />

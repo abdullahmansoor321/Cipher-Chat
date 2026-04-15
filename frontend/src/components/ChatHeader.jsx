@@ -25,7 +25,7 @@ function ChatHeader() {
           <img
             src={selectedUser.profilePic || "/avatar.png"}
             alt={selectedUser.fullName}
-            className={`size-10 rounded-xl object-cover border-2 transition-colors ${isOnline ? "border-amber-500/30" : "border-white/10"}`}
+            className={`size-10 rounded-full object-cover border-2 transition-colors ${isOnline ? "border-amber-500/30" : "border-white/10"}`}
           />
           <div className={`absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-[#07070a] ${isOnline ? "bg-green-500" : "bg-zinc-600"}`} />
         </div>

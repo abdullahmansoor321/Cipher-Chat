@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router";
-import { LockKeyhole, Mail, Eye, EyeOff, ShieldCheck, ArrowRight } from "lucide-react";
+import { LockKeyhole, Mail, Eye, EyeOff, ShieldCheck, ArrowRight, User } from "lucide-react";
 import CursorEffect from "../components/CursorEffect";
 
 /* ── Animated floating chat preview ── */
@@ -207,47 +207,49 @@ export default function LoginPage() {
       </div>
 
       {/* ── Nav ── */}
-      <header className="relative z-10 flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/[0.04] backdrop-blur-[2px] bg-black/10">
-        <button type="button" onClick={() => window.location.reload()} className="appear flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500/50 rounded-md">
-          <div className="size-8 rounded-lg bg-amber-500 flex items-center justify-center animate-glow">
-            <ShieldCheck className="size-4 text-black animate-spin-slow" strokeWidth={2.5} />
+      <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 md:px-12 py-4 sm:py-5 border-b border-white/[0.04] backdrop-blur-[2px] bg-black/10">
+        <button type="button" onClick={() => window.location.reload()} className="appear flex items-center gap-1.5 sm:gap-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500/50 rounded-md shrink-0">
+          <div className="size-7 sm:size-8 rounded-lg bg-amber-500 flex items-center justify-center animate-glow">
+            <ShieldCheck className="size-3 sm:size-4 text-black animate-spin-slow" strokeWidth={2.5} />
           </div>
-          <span className="font-bold text-base tracking-tight">Cipher<span className="text-amber-500">Chat</span></span>
+          <span className="font-bold text-sm sm:text-base tracking-tight">Cipher<span className="text-amber-500">Chat</span></span>
         </button>
-        <div className="appear hidden sm:flex items-center gap-4">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
+        <div className="appear flex items-center gap-2 sm:gap-4 ml-auto">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
             <div className="size-1.5 rounded-full bg-green-400 animate-pulse" />
             <span className="text-[10px] font-mono-cipher text-green-400/80 uppercase tracking-widest">Secure Relay Live</span>
           </div>
-          <p className="text-zinc-500 text-sm">
-            New to CipherChat?{" "}
+          <p className="text-zinc-500 text-xs sm:text-sm whitespace-nowrap">
+            <span className="hidden sm:inline">New to CipherChat? </span>
             <Link to="/signup" className="text-amber-500 hover:text-amber-400 font-semibold transition-colors">
-              Start free →
+              <span className="hidden sm:inline">Start free</span>
+              <span className="sm:hidden">Sign up</span>
+              {" "}→
             </Link>
           </p>
         </div>
       </header>
 
-      <main className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-10 xl:gap-16 min-h-[calc(100vh-73px)] max-w-7xl mx-auto px-6 lg:px-12 py-8 lg:py-0">
+      <main className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-10 xl:gap-16 lg:min-h-[calc(100vh-73px)] max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8 lg:py-0">
         <div className="absolute inset-0 pointer-events-none auth-content-shield-login" />
 
-        {/* ══ LEFT — Brand hero ══ */}
-        <div className="flex flex-col justify-center px-0 lg:px-4 py-8 lg:py-0 lg:w-[540px] shrink-0 space-y-10 relative">
+        {/* ══ Hero Section (Top on mobile, left on desktop) ══ */}
+        <div className="flex flex-col justify-center px-0 lg:px-4 py-4 sm:py-6 lg:py-0 lg:w-[540px] shrink-0 space-y-6 sm:space-y-8 lg:space-y-10 relative w-full lg:w-auto order-1 lg:order-1">
           <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
           
-          {/* Hero */}
+          {/* Hero Text */}
           <div className="space-y-4 max-w-xl">
             <p className="appear-left-1 font-mono-cipher text-xs text-zinc-600 tracking-[0.25em] uppercase">Conversations that stay</p>
-            <h1 className="appear-left-2 text-5xl sm:text-6xl xl:text-6xl font-black leading-[0.9] tracking-tighter min-h-[1.1em]">
+            <h1 className="appear-left-2 text-4xl sm:text-5xl lg:text-6xl font-black leading-[0.9] tracking-tighter min-h-[1.1em]">
               <TypeWriter words={WORDS} speed={75} pause={2200} />
             </h1>
-            <p className="appear-left-3 text-zinc-400 text-lg leading-relaxed max-w-md font-medium">
+            <p className="appear-left-3 text-zinc-400 text-base sm:text-lg leading-relaxed max-w-md font-medium">
               End-to-end encrypted messaging with instant delivery and live sync. Private by design, reliable by default.
             </p>
           </div>
 
-          {/* Floating chat preview ── MOVED ABOVE STATS ── */}
-          <div className="appear-3 relative min-h-[260px] w-full max-w-xl hidden sm:block">
+          {/* Floating chat preview (hidden on mobile, shown on desktop) */}
+          <div className="hidden lg:block appear-3 relative min-h-[260px] w-full max-w-xl">
             {/* Console Header */}
             <div className="absolute -top-6 left-0 right-0 flex items-center justify-between px-2 py-1 bg-white/[0.03] border-x border-t border-white/[0.08] rounded-t-lg">
                <div className="flex items-center gap-1.5 ">
@@ -261,12 +263,10 @@ export default function LoginPage() {
             
             <MessageConsole />
           </div>
-
         </div>
 
-
-        {/* ══ RIGHT — Form ══ */}
-        <div className="flex items-center justify-center px-6 md:px-12 py-8 lg:py-0 lg:flex-1">
+        {/* ══ Form (Middle on mobile, right on desktop) ══ */}
+        <div className="flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 lg:py-0 lg:flex-1 w-full lg:w-auto order-2 lg:order-2">
           <div className="w-full max-w-[400px] space-y-7">
 
             <div className="appear-1">
@@ -323,11 +323,45 @@ export default function LoginPage() {
                       ? <><div className="size-4 rounded-full border-2 border-black/30 border-t-black spin" /><span>Authenticating...</span></>
                       : <><span>Continue to Secure Chat</span><ArrowRight className="size-4" /></>}
                   </button>
+
+                  {/* OR Divider */}
+                  <div className="flex items-center gap-3 my-5">
+                    <div className="flex-1 h-px bg-white/[0.1]" />
+                    <span className="text-xs text-zinc-600 font-semibold">OR</span>
+                    <div className="flex-1 h-px bg-white/[0.1]" />
+                  </div>
+
+                  {/* Create Account Link */}
+                  <Link 
+                    to="/signup"
+                    className="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-amber-500/20 text-amber-400 hover:text-amber-300 font-semibold text-sm transition-all duration-200"
+                  >
+                    Create your account
+                  </Link>
                 </form>
               </div>
             </div>
 
 
+          </div>
+        </div>
+
+        {/* ══ Console (Bottom on mobile only) ══ */}
+        <div className="flex flex-col justify-center px-0 py-6 sm:py-8 shrink-0 space-y-0 relative w-full order-3 lg:hidden">
+          {/* Floating chat preview */}
+          <div className="appear-3 relative min-h-[240px] sm:min-h-[260px] w-full max-w-xl mx-auto">
+            {/* Console Header */}
+            <div className="absolute -top-6 left-0 right-0 flex items-center justify-between px-2 py-1 bg-white/[0.03] border-x border-t border-white/[0.08] rounded-t-lg">
+               <div className="flex items-center gap-1.5 ">
+                 <div className="size-1.5 rounded-full bg-amber-500 animate-pulse" />
+                 <span className="text-[9px] font-mono-cipher text-zinc-500 uppercase tracking-widest">Console // Relay_Monitor</span>
+               </div>
+               <div className="text-[8px] font-mono-cipher text-zinc-700">NODE: DX-Cipher-09</div>
+            </div>
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-transparent to-transparent z-10 pointer-events-none" />
+            
+            <MessageConsole />
           </div>
         </div>
       </main>

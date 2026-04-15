@@ -220,17 +220,19 @@ export default function SignUpPage() {
       </div>
 
       {/* ── Nav ── */}
-      <header className="relative z-10 flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/[0.04] backdrop-blur-[2px] bg-black/10">
-        <button type="button" onClick={() => window.location.reload()} className="appear flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500/50 rounded-md">
-          <div className="size-8 rounded-lg bg-amber-500 flex items-center justify-center animate-glow">
-            <ShieldCheck className="size-4 text-black animate-spin-slow" strokeWidth={2.5} />
+      <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 md:px-12 py-4 sm:py-5 border-b border-white/[0.04] backdrop-blur-[2px] bg-black/10">
+        <button type="button" onClick={() => window.location.reload()} className="appear flex items-center gap-1.5 sm:gap-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500/50 rounded-md shrink-0">
+          <div className="size-7 sm:size-8 rounded-lg bg-amber-500 flex items-center justify-center animate-glow">
+            <ShieldCheck className="size-3 sm:size-4 text-black animate-spin-slow" strokeWidth={2.5} />
           </div>
-          <span className="font-bold text-base tracking-tight">Cipher<span className="text-amber-500">Chat</span></span>
+          <span className="font-bold text-sm sm:text-base tracking-tight">Cipher<span className="text-amber-500">Chat</span></span>
         </button>
-        <p className="appear text-zinc-500 text-sm hidden sm:block">
-          Already have an account?{" "}
+        <p className="appear text-zinc-500 text-xs sm:text-sm ml-auto whitespace-nowrap">
+          <span className="hidden sm:inline">Already have an account? </span>
           <Link to="/login" className="text-amber-500 hover:text-amber-400 font-semibold transition-colors">
-            Sign in →
+            <span className="hidden sm:inline">Sign in</span>
+            <span className="sm:hidden">Login</span>
+            {" "}→
           </Link>
         </p>
       </header>
@@ -344,6 +346,16 @@ export default function SignUpPage() {
                     By creating an account, you agree to our Terms of Service and Privacy Policy.
                   </p>
                 </form>
+
+                {/* Mobile sign-in link */}
+                <div className="lg:hidden pt-3 border-t border-white/[0.1]">
+                  <p className="text-center text-zinc-500 text-xs">
+                    Already have an account?{" "}
+                    <Link to="/login" className="text-amber-500 hover:text-amber-400 font-semibold transition-colors">
+                      Sign in here
+                    </Link>
+                  </p>
+                </div>
               </div>
             </div>
 
