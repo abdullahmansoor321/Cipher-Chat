@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router";
 import { LockKeyhole, Mail, Eye, EyeOff, ShieldCheck, ArrowRight, User } from "lucide-react";
 import CursorEffect from "../components/CursorEffect";
+import { GoogleLogin } from "@react-oauth/google";
 
 /* ── Animated floating chat preview ── */
 const MESSAGES = [
@@ -170,7 +171,7 @@ export default function LoginPage() {
   const [active, setActive] = useState(null);
   const [consoleCompleted, setConsoleCompleted] = useState(false);
   const formRef = useRef(null);
-  const { login, isLoggingIn } = useAuthStore();
+  const { login, isLoggingIn ,googleLogin} = useAuthStore();
 
   const handleSubmit = (e) => { e.preventDefault(); login(form); };
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
@@ -351,6 +352,23 @@ export default function LoginPage() {
                     <div className="flex-1 h-px bg-white/[0.1]" />
                     <span className="text-xs text-zinc-600 font-semibold">OR</span>
                     <div className="flex-1 h-px bg-white/[0.1]" />
+                  </div>
+                  <div className="google-login-shell ">
+                    <GoogleLogin
+                      onSuccess={(response) => {
+                        if (response.credential) {
+                          googleLogin(response.credential);
+                        }
+                      }}
+                      onError={() => console.error("Google sign-in failed")}
+                      theme="filled_black"
+                      // width="100%"
+                      // size="large"
+                      shape="pill"
+                      text="continue_with"
+                      
+
+                    />
                   </div>
 
                   {/* Create Account Link */}

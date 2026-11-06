@@ -6,6 +6,7 @@ import {
   User, Zap, Lock, Image as ImageIcon, Volume2, Check
 } from "lucide-react";
 import CursorEffect from "../components/CursorEffect";
+import { GoogleLogin } from "@react-oauth/google";
 
 const FEATURES = [
   { icon: Lock,      title: "Zero-Knowledge",      desc: "Encryption keys are generated and retained locally." },
@@ -174,7 +175,7 @@ export default function SignUpPage() {
   const [form, setForm] = useState({ fullName: "", email: "", password: "" });
   const [showPw, setShowPw] = useState(false);
   const [active, setActive] = useState(null);
-  const { signup, isSigningUp } = useAuthStore();
+  const { signup, isSigningUp, googleLogin } = useAuthStore();
 
   const handleSubmit = (e) => { e.preventDefault(); signup(form); };
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
@@ -341,6 +342,28 @@ export default function SignUpPage() {
                       ? <><div className="size-4 rounded-full border-2 border-black/30 border-t-black spin" /><span>Creating secure account...</span></>
                       : <><span>Create Secure Account</span><ArrowRight className="size-4" /></>}
                   </button>
+
+                                    {/* OR Divider */}
+                  <div className="flex items-center gap-3 my-5">
+                    <div className="flex-1 h-px bg-white/[0.1]" />
+                    <span className="text-xs text-zinc-600 font-semibold">OR</span>
+                    <div className="flex-1 h-px bg-white/[0.1]" />
+                  </div>
+
+                  {/* Google Sign Up */}
+                  <div className="google-login-shell">
+                    <GoogleLogin
+                      onSuccess={(response) => {
+                        if (response.credential) {
+                          googleLogin(response.credential);
+                        }
+                      }}
+                      onError={() => console.error("Google sign-in failed")}
+                      theme="filled_black"
+                      shape="pill"
+                      text="signup_with"
+                    />
+                  </div>
 
                   <p className="text-center text-[10px] text-zinc-700">
                     By creating an account, you agree to our Terms of Service and Privacy Policy.

@@ -106,6 +106,20 @@ html, body {
   -webkit-backdrop-filter: blur(24px);
 }
 
+.google-login-shell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  background: transparent;
+  color-scheme: light; /* must match the iframe's scheme */
+}
+
+.google-login-shell iframe {
+  color-scheme: light;
+  background: transparent;
+}
+
 /* ── NOISE TEXTURE ── */
 .noise::after {
   content: '';
@@ -389,4 +403,3 @@ html, body {
 @media (max-width: 768px) {
   main { padding-top: 1rem !important; padding-bottom: 1rem !important; }
 }
-

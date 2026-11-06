@@ -4,6 +4,9 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { ENV } from "../lib/env.js";
 import cloudinary from "../lib/cloudinary.js";
+import { OAuth2Client } from "google-auth-library";
+
+const googleClient = new OAuth2Client(ENV.GOOGLE_CLIENT_ID);
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -78,6 +81,11 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
     // never tell the client which one is incorrect: password or email
+    if (!user.password) {
+    return res.status(400).json({
+      message: "This account uses Google sign-in",
+    });
+  }  
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
@@ -95,6 +103,74 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
+export const googleAuth = async (req, res) => {
+  const { credential } = req.body;
+
+  try {
+    // 1. Make sure Google sent us a token
+    if (!credential) {
+      return res.status(400).json({ message: "Google credential is required" });
+    }
+
+    // 2. Verify the token with Google
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: ENV.GOOGLE_CLIENT_ID,
+    });
+
+    // 3. Read the verified user's information
+    const payload = ticket.getPayload();
+
+    if (!payload || !payload.sub || !payload.email || !payload.email_verified) {
+      return res.status(401).json({ message: "Invalid Google account" });
+    }
+
+    const googleId = payload.sub;
+    const email = payload.email.toLowerCase();
+    const fullName = payload.name || email.split("@")[0];
+    const profilePic = payload.picture || "";
+
+    // 4. Check whether this Google account already exists
+    let user = await User.findOne({ googleId });
+
+    // 5. If not, check whether this email belongs to another account
+    if (!user) {
+      const existingUser = await User.findOne({ email });
+
+      if (existingUser) {
+        return res.status(409).json({
+          message: "An account with this email already exists. Please log in with your password.",
+        });
+      }
+
+      // 6. Create a new Google user
+      user = await User.create({
+        googleId,
+        email,
+        fullName,
+        profilePic,
+      });
+    }
+
+    // 7. Issue our existing Cipher-Chat JWT cookie
+    generateToken(user._id, res);
+
+    // 8. Send user information to React
+    return res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("Error in Google auth:", error);
+    return res.status(401).json({ message: "Google authentication failed" });
+  }
+};
+
 
 export const logout = (_, res) => {
   res.cookie("jwt", "", { maxAge: 0 });
